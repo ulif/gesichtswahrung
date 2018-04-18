@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # facerec_webcam.py -- Detect and store faces via webcam
-# 
+#
 # Copyright (c) 2018 ulif
 #
-# 
 import face_recognition
 import cv2
 
@@ -53,6 +52,7 @@ def draw_text_box(frame, x, y, text, scale=1.0, width=None, height=None):
 
 
 FONT = cv2.FONT_HERSHEY_DUPLEX
+RESIZE_RATIO = 4  # for faster face recognition we shrink frames
 
 # Get a reference to webcam #0 (the default one)
 video_capture = cv2.VideoCapture(0)
@@ -67,12 +67,9 @@ while True:
     # Grab a single frame of video
     ret, frame = video_capture.read()
 
-    # Resize frame of video to 1/4 size for faster face recognition processing
-    small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
-
-    # Convert the image from BGR color (which OpenCV uses) to RGB color (which
-    # face_recognition uses)
-    rgb_small_frame = small_frame[:, :, ::-1]
+    small_frame = cv2.resize(          i       # resize for faster processing
+            frame, (0, 0), fx=1.0/RESIZE_RATIO, fy=1.0/RESIZE_RATIO)
+    rgb_small_frame = small_frame[:, :, ::-1]  # convert BGR -> RGB
 
     # Only process every other frame of video to save time
     if process_this_frame and mode == 'DETECT':
