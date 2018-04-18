@@ -66,11 +66,14 @@ def draw_face_box(frame, name, loc, color=(0x00, 0x00, 0xff)):
     (BGR model). The name `name` is put into the box bottom, like a caption.
     """
     top, right, bottom, left = loc
+    fg = (0xff, 0xff, 0xff)
+    if sum(color) > 0x180:
+        fg = (0x00, 0x00, 0x00)
     cv2.rectangle(frame, (left, top), (right, bottom), color, 2)
     cv2.rectangle(
         frame, (left, bottom - 35), (right, bottom), color, cv2.FILLED)
     cv2.putText(
-        frame, name, (left + 6, bottom - 6), FONT, 1.0, (0xff, 0xff, 0xff), 1)
+        frame, name, (left + 6, bottom - 6), FONT, 1.0, fg, 1)
 
 
 # Get a reference to webcam #0 (the default one)
