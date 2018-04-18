@@ -6,6 +6,8 @@
 import face_recognition
 import cv2
 
+FONT = cv2.FONT_HERSHEY_DUPLEX
+RESIZE_RATIO = 4  # for faster face recognition we shrink frames
 
 class Faces(object):
 
@@ -24,14 +26,18 @@ class Faces(object):
             return self.faces[matches.index(True)][1]
         return 'Unknown'
 
-    def detect(self, frame):
+    def detect(self, frame, ratio=RESIZE_RATIO):
         """Lookup faces in `frame`.
 
         Return all faces found (known and unknown) with their position in frame
-        and name
+        and name.
         """
-        locs = face_recognition.face_locations(frame)
-        faces_in_frame = face_recognition.face_encodings(frame, locs)
+        # shrink frame for faster processing
+        small_frame = cv2.resize(frame, (0, 0), fx=1.0/ratio, fy=1.0/ratio)
+        # convert from BGR format (cv2) -> RGB (face_recognition)
+        small_frame = small_frame[:, :, ::-1]
+        locs = face_recognition.face_locations(small_frame)
+        faces_in_frame = face_recognition.face_encodings(small_frame, locs)
         for loc, face in zip(locs, faces_in_frame):
             yield loc, self.getName(face)
 
@@ -51,8 +57,6 @@ def draw_text_box(frame, x, y, text, scale=1.0, width=None, height=None):
         frame, text, (x + 2, y + h + 2), FONT, scale, (0xff, 0xff, 0xff), 1)
 
 
-FONT = cv2.FONT_HERSHEY_DUPLEX
-RESIZE_RATIO = 4  # for faster face recognition we shrink frames
 
 # Get a reference to webcam #0 (the default one)
 video_capture = cv2.VideoCapture(0)
@@ -67,14 +71,10 @@ while True:
     # Grab a single frame of video
     ret, frame = video_capture.read()
 
-    small_frame = cv2.resize(          i       # resize for faster processing
-            frame, (0, 0), fx=1.0/RESIZE_RATIO, fy=1.0/RESIZE_RATIO)
-    rgb_small_frame = small_frame[:, :, ::-1]  # convert BGR -> RGB
-
     # Only process every other frame of video to save time
     if process_this_frame and mode == 'DETECT':
         # Find all the faces and face encodings in the current frame of video
-        found_faces = [x for x in faces.detect(rgb_small_frame)]
+        found_faces = [x for x in faces.detect(frame)]
 
     process_this_frame = not process_this_frame
 
