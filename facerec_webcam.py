@@ -37,6 +37,8 @@ class Faces(object):
         # convert from BGR format (cv2) -> RGB (face_recognition)
         small_frame = small_frame[:, :, ::-1]
         locs = face_recognition.face_locations(small_frame)
+        # upscale found face locations (compensate shrinking above)
+        locs = [tuple([ratio * val for val in loc]) for loc in locs]
         faces_in_frame = face_recognition.face_encodings(small_frame, locs)
         for loc, face in zip(locs, faces_in_frame):
             yield loc, self.getName(face)
@@ -80,13 +82,6 @@ while True:
 
     # Display the results
     for (top, right, bottom, left), name in found_faces:
-        # Scale back up face locations since the frame we detected in was
-        # scaled to 1/4 size
-        top *= 4
-        right *= 4
-        bottom *= 4
-        left *= 4
-
         # Draw a box around the face
         cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
 
