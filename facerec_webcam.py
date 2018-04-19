@@ -105,6 +105,7 @@ while True:
     # Grab a single frame of video
     if mode == 'DETECT':
         ret, frame = video_capture.read()
+        orig_frame = frame.copy()
 
     # Only process every other frame of video to save time
     if process_this_frame and mode == 'DETECT':
