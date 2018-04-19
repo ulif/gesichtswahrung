@@ -12,6 +12,7 @@ import cv2
 FONT = cv2.FONT_HERSHEY_DUPLEX
 RESIZE_RATIO = 4  # for faster face recognition we shrink frames
 
+
 class Faces(object):
 
     faces = []
@@ -81,7 +82,7 @@ def draw_face_box(frame, name, loc, color=(0x00, 0x00, 0xff)):
 
 
 def toggle_mode(mode):
-    if mode  == 'DETECT':
+    if mode == 'DETECT':
         mode = 'SNAPSHOT'
         picked = 0
     else:
@@ -124,11 +125,10 @@ while True:
 
     draw_text_box(frame, 0, 0, "MODE: %s" % mode)
     bottom = frame.shape[0]
-    draw_text_box(frame, 0, bottom - 21,
-        "<press q to quit, s to toggle mode>", 0.6)
+    draw_text_box(
+        frame, 0, bottom - 21, "<press q to quit, s to toggle mode>", 0.6)
     if mode == 'SNAPSHOT':
         draw_text_box(frame, 0, 25, 'SPC to select, ENTER to choose', 0.6)
-
 
     # Display the resulting image
     cv2.imshow('Video', frame)
