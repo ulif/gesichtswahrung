@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # facerec_webcam.py -- Detect and store faces via webcam
 #
