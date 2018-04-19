@@ -59,7 +59,6 @@ def draw_text_box(frame, x, y, text, scale=1.0, width=None, height=None):
     h = height or h
     cv2.rectangle(
         frame, (x, y), (x + w + 5, y + h + 5), (0x00, 0x00, 0x00), cv2.FILLED)
-    # cv2.rectangle(frame, (x, y), (x + w + 5, y + h + 5), (0xff, 0xff, 0xff))
     cv2.putText(
         frame, text, (x + 2, y + h + 2), FONT, scale, (0xff, 0xff, 0xff), 1)
 
