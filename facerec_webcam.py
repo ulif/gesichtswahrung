@@ -68,7 +68,7 @@ def draw_text_box(frame, x, y, text, scale=1.0, width=None, height=None):
 def draw_face_box(frame, name, loc, color=(0x00, 0x00, 0xff)):
     """Draw a box on `frame` at location `loc`.
 
-    Draws a little frame around faces on location `loc`, couloured in `color`
+    Draws a little frame around faces on location `loc`, coloured in `color`
     (BGR model). The name `name` is put into the box bottom, like a caption.
     """
     top, right, bottom, left = loc
