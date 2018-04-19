@@ -32,8 +32,10 @@ class Faces(object):
     def detect(self, frame, ratio=RESIZE_RATIO):
         """Lookup faces in `frame`.
 
-        Return all faces found (known and unknown) with their position in frame
-        and name.
+        Return all faces found (known and unknown) with as tuples (position in
+        frame, name, encoding). The position is provided as (top, right,
+        bottom, left), the name is a string and encoding is an numpy array
+        containing the "encoding" of a face.
         """
         # shrink frame for faster processing
         small_frame = cv2.resize(frame, (0, 0), fx=1.0/ratio, fy=1.0/ratio)
@@ -44,7 +46,7 @@ class Faces(object):
         # upscale found face locations (compensate shrinking above)
         locs = [tuple([ratio * val for val in loc]) for loc in locs]
         for loc, face in zip(locs, faces_in_frame):
-            yield loc, self.getName(face)
+            yield loc, self.getName(face), face
 
 
 def draw_text_box(frame, x, y, text, scale=1.0, width=None, height=None):
@@ -114,7 +116,7 @@ while True:
 
     # Display the results
     for num, face in enumerate(found_faces):
-        loc, name = face
+        loc, name, enc = face
         color = (0x00, 0x00, 0xff)
         if picked_face == num:
             color = (0x00, 0xff, 0xff)
