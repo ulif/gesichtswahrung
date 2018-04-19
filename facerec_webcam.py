@@ -142,7 +142,7 @@ while True:
     elif key == ord(' '):
         if mode == 'SNAPSHOT' and len(found_faces):
             picked_face = (picked_face + 1) % len(found_faces)
-    elif key == 13 and mode == 'SNAPSHOT':
+    elif key == 13 and mode == 'SNAPSHOT' and len(found_faces):
         name = 'Suspect #%s' % (len(faces.faces) + 1)
         faces.faces.append((found_faces[picked_face][2], name, ))
         mode, picked_face = toggle_mode(mode)
