@@ -125,7 +125,7 @@ while True:
     draw_text_box(frame, 0, 0, "MODE: %s" % mode)
     bottom = frame.shape[0]
     draw_text_box(frame, 0, bottom - 21,
-        "<press q to quit, s to switch mode>", 0.6)
+        "<press q to quit, s to toggle mode>", 0.6)
     if mode == 'SNAPSHOT':
         draw_text_box(frame, 0, 25, 'SPC to select, ENTER to choose', 0.6)
 
