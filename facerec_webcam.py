@@ -3,6 +3,9 @@
 #
 # Copyright (c) 2018 ulif
 #
+# This software may be modified and distributed under the terms of the MIT
+# licence.  See the LICENSE file for details.
+#
 import face_recognition
 import cv2
 
