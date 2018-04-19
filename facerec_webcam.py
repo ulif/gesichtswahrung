@@ -79,6 +79,16 @@ def draw_face_box(frame, name, loc, color=(0x00, 0x00, 0xff)):
         frame, name, (left + 6, bottom - 6), FONT, 1.0, fg, 1)
 
 
+def toggle_mode(mode):
+    if mode  == 'DETECT':
+        mode = 'SNAPSHOT'
+        picked = 0
+    else:
+        mode = 'DETECT'
+        picked = None
+    return mode, picked
+
+
 # Get a reference to webcam #0 (the default one)
 video_capture = cv2.VideoCapture(0)
 
@@ -88,6 +98,7 @@ found_faces = []
 process_this_frame = True
 mode = 'DETECT'
 picked_face = None
+
 
 while True:
     # Grab a single frame of video
@@ -125,12 +136,7 @@ while True:
     if key == ord('q'):
         break
     elif key == ord('s'):
-        if mode == 'DETECT':
-            mode = 'SNAPSHOT'
-            picked_face = 0
-        else:
-            mode = 'DETECT'
-            picked_face = None
+        mode, picked_face = toggle_mode(mode)
     elif key == ord(' '):
         if mode == 'SNAPSHOT' and len(found_faces):
             picked_face = (picked_face + 1) % len(found_faces)
