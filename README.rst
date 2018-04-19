@@ -41,6 +41,21 @@ You can leave the interpreter pressing ``CTRL-D``. The above imports should not
 raise any exception.
 
 
+Running
+-------
+
+Run ``facerec_webcam`` as::
+
+    (py36) $ python facerec_webcam
+
+This script requires a working webcam connected to your device. It allows to
+capture faces and to recognize these captured faces. All image data is held in
+memory only. No need to create photographs beforehand.
+
+Type ``q`` to quit. Type ``s`` to toggle mode. In `snapshot` mode the image is
+frozen. You can select a face pressing `SPACE` followed by `ENTER`.
+
+
 Misc
 ----
 
