@@ -9,6 +9,10 @@
 #
 import face_recognition
 import cv2
+import logging
+import sys
+
+logger = logging.getLogger("ulif.facerec_webcam")
 
 FONT = cv2.FONT_HERSHEY_DUPLEX
 RESIZE_RATIO = 4  # for faster face recognition we shrink frames
@@ -107,6 +111,10 @@ while True:
     # Grab a single frame of video
     if mode == 'DETECT':
         ret, frame = video_capture.read()
+        if frame is None:
+            logger.fatal("Not a valid video capture source: 1")
+            sys.exit(1)
+
         orig_frame = frame.copy()
 
     # Only process every other frame of video to save time
