@@ -6,6 +6,11 @@ Toy stuff based on `face_recognition`_
 Here we collect Python scripts based on `face_recognition`_, a simple, yet
 awesome facial recognition API by `Adam Geitgey`_.
 
+Scripts:
+
+     - `facerec_webcam.py`
+          Capture and recognize faces live from webcam.
+
 
 Preparation
 -----------
