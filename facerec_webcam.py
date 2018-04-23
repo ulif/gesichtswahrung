@@ -96,6 +96,15 @@ def toggle_mode(mode):
     return mode, picked
 
 
+def draw_modestate(frame, mode):
+    draw_text_box(frame, 0, 0, "MODE: %s" % mode)
+    bottom = frame.shape[0]
+    draw_text_box(
+        frame, 0, bottom - 21, "<press q to quit, s to toggle mode>", 0.6)
+    if mode == 'SNAPSHOT':
+        draw_text_box(frame, 0, 25, 'SPC to select, ENTER to choose', 0.6)
+
+
 # Get a reference to webcam #0 (the default one)
 video_capture = cv2.VideoCapture(0)
 
@@ -133,12 +142,7 @@ while True:
             color = (0x00, 0xff, 0xff)
         draw_face_box(frame, name, loc, color=color)
 
-    draw_text_box(frame, 0, 0, "MODE: %s" % mode)
-    bottom = frame.shape[0]
-    draw_text_box(
-        frame, 0, bottom - 21, "<press q to quit, s to toggle mode>", 0.6)
-    if mode == 'SNAPSHOT':
-        draw_text_box(frame, 0, 25, 'SPC to select, ENTER to choose', 0.6)
+    draw_modestate(frame, mode)
 
     # Display the resulting image
     cv2.imshow('Video', frame)
