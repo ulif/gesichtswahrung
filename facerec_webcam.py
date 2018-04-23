@@ -106,7 +106,8 @@ def draw_modestate(frame, mode):
 
 
 # Get a reference to webcam #0 (the default one)
-video_capture = cv2.VideoCapture(0)
+video_src = 0
+video_capture = cv2.VideoCapture(video_src)
 
 
 # Initialize some variables
@@ -122,7 +123,7 @@ while True:
     if mode == 'DETECT':
         ret, frame = video_capture.read()
         if frame is None:
-            logger.fatal("Not a valid video capture source: 1")
+            logger.fatal("Not a valid video capture source: %s" % video_src)
             sys.exit(1)
 
         orig_frame = frame.copy()
