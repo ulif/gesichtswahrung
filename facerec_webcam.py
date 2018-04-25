@@ -22,7 +22,15 @@ class Faces(object):
 
     faces = []
 
-    def add(self, path, name):
+    def add(self, face):
+        """Register `face`.
+
+        `face` is expected to be an encoded face.
+        """
+        name = 'Suspect #%s' % (len(self.faces) + 1)
+        self.faces.append((face, name))
+
+    def addFromImage(self, path, name):
         image = face_recognition.load_image_file(path)
         for face in face_recognition.face_encodings(image):
             self.faces.append((face, name))
@@ -158,8 +166,7 @@ while True:
         if mode == 'SNAPSHOT' and len(found_faces):
             picked_face = (picked_face + 1) % len(found_faces)
     elif key == 13 and mode == 'SNAPSHOT' and len(found_faces):
-        name = 'Suspect #%s' % (len(faces.faces) + 1)
-        faces.faces.append((found_faces[picked_face][2], name, ))
+        faces.add(found_faces[picked_face][2])
         mode, picked_face = toggle_mode(mode)
 
 
