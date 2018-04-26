@@ -16,19 +16,27 @@ logger = logging.getLogger("ulif.facerec_webcam")
 
 FONT = cv2.FONT_HERSHEY_DUPLEX
 RESIZE_RATIO = 4  # for faster face recognition we shrink frames
+MAX_FACES = 10    # maximum number of faces we look for (reduce load)
 
 
 class Faces(object):
 
     faces = []
+    current_num = 0
 
     def add(self, face):
         """Register `face`.
 
-        `face` is expected to be an encoded face.
+        `face` is expected to be an encoded face, as returned by
+        `face_recognition.face_encodings()`.
+
+        We store at most ``MAX_FACES`` for recognition in order to reduce load
+        (more faces to compare, more time needed to compute a frame).
         """
-        name = 'Suspect #%s' % (len(self.faces) + 1)
+        self.current_num += 1
+        name = 'Suspect #%s' % self.current_num
         self.faces.append((face, name))
+        self.faces = self.faces[-MAX_FACES:]
 
     def addFromImage(self, path, name):
         image = face_recognition.load_image_file(path)
