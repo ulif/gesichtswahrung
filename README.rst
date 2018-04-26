@@ -51,7 +51,7 @@ Running
 
 Run ``facerec_webcam`` as::
 
-    (py36) $ python facerec_webcam
+    (py36) $ python facerec_webcam.py
 
 This script requires a working webcam connected to your device. It allows to
 capture faces and to recognize these captured faces. All image data is held in
