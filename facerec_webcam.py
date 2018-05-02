@@ -17,6 +17,7 @@ logger = logging.getLogger("ulif.facerec_webcam")
 FONT = cv2.FONT_HERSHEY_DUPLEX
 RESIZE_RATIO = 4  # for faster face recognition we shrink frames
 MAX_FACES = 10    # maximum number of faces we look for (reduce load)
+VIDEO_SRC = 0     # the number of video source we want to use (first one: 0)
 
 
 class Faces(object):
@@ -124,8 +125,7 @@ def draw_modestate(frame, mode):
 
 
 # Get a reference to webcam #0 (the default one)
-video_src = 0
-video_capture = cv2.VideoCapture(video_src)
+video_capture = cv2.VideoCapture(VIDEO_SRC)
 
 
 # Initialize some variables
@@ -141,10 +141,10 @@ while True:
     if mode == 'DETECT':
         ret, frame = video_capture.read()
         if frame is None:
-            logger.fatal("Not a valid video capture source: %s" % video_src)
+            logger.fatal("Not a valid video capture source: %s" % VIDEO_SRC)
             sys.exit(1)
 
-        orig_frame = frame.copy()
+        # orig_frame = frame.copy()
 
     # Only process every other frame of video to save time
     if process_this_frame and mode == 'DETECT':
