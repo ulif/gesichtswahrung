@@ -39,6 +39,8 @@ class Faces(object):
         self.faces = self.faces[-MAX_FACES:]
 
     def addFromImage(self, path, name):
+        """Add first image from image file located in `path`.
+        """
         image = face_recognition.load_image_file(path)
         for face in face_recognition.face_encodings(image):
             self.faces.append((face, name))
