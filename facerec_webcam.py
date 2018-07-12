@@ -18,6 +18,7 @@ FONT = cv2.FONT_HERSHEY_DUPLEX
 RESIZE_RATIO = 4  # for faster face recognition we shrink frames
 MAX_FACES = 10    # maximum number of faces we look for (reduce load)
 VIDEO_SRC = 0     # the number of video source we want to use (first one: 0)
+DEFAULT_NAME = 'Unknown'
 
 
 class Faces(object):
@@ -52,7 +53,7 @@ class Faces(object):
         matches = face_recognition.compare_faces(known_faces, face)
         if True in matches:
             return self.faces[matches.index(True)][1]
-        return 'Unknown'
+        return DEFAULT_NAME
 
     def detect(self, frame, ratio=RESIZE_RATIO):
         """Lookup faces in `frame`.
