@@ -17,8 +17,9 @@ logger = logging.getLogger("ulif.facerec_webcam")
 FONT = cv2.FONT_HERSHEY_DUPLEX
 RESIZE_RATIO = 4  # for faster face recognition we shrink frames
 MAX_FACES = 10    # maximum number of faces we look for (reduce load)
-VIDEO_SRC = 0     # the number of video source we want to use (first one: 0)
+VIDEO_SRC = 1     # the number of video source we want to use (first one: 0)
 DEFAULT_NAME = 'Unknown'
+FULLSCREEN = False
 
 
 class Faces(object):
@@ -127,6 +128,10 @@ def draw_modestate(frame, mode):
 
 # Get a reference to webcam #0 (the default one)
 video_capture = cv2.VideoCapture(VIDEO_SRC)
+if FULLSCREEN:
+    cv2.namedWindow('Video', cv2.WND_PROP_FULLSCREEN)
+    cv2.setWindowProperty(
+            'Video', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 
 
 # Initialize some variables
