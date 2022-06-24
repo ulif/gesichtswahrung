@@ -15,11 +15,11 @@ import sys
 logger = logging.getLogger("ulif.facerec_webcam")
 
 FONT = cv2.FONT_HERSHEY_DUPLEX
-RESIZE_RATIO = 4  # for faster face recognition we shrink frames
-MAX_FACES = 10    # maximum number of faces we look for (reduce load)
-VIDEO_SRC = 1     # the number of video source we want to use (first one: 0)
+RESIZE_RATIO = 4   # for faster face recognition we shrink frames
+MAX_FACES = 10     # maximum number of faces we look for (reduce load)
+VIDEO_SRC = 0      # the number of video source we want to use (first one: 0)
 DEFAULT_NAME = 'Unknown'
-FULLSCREEN = False
+FULLSCREEN = False # Initial window state
 
 
 class Faces(object):
@@ -117,6 +117,15 @@ def toggle_mode(mode):
     return mode, picked
 
 
+def toggle_fullscreen(fullscreen):
+    new_val = cv2.WINDOW_FULLSCREEN
+    if fullscreen:
+        new_val = cv2.WINDOW_NORMAL
+    cv2.namedWindow('Video', cv2.WND_PROP_FULLSCREEN)
+    cv2.setWindowProperty('Video', cv2.WND_PROP_FULLSCREEN, new_val)
+    return not fullscreen
+
+
 def draw_modestate(frame, mode):
     draw_text_box(frame, 0, 0, "MODE: %s" % mode)
     bottom = frame.shape[0]
@@ -128,10 +137,6 @@ def draw_modestate(frame, mode):
 
 # Get a reference to webcam #0 (the default one)
 video_capture = cv2.VideoCapture(VIDEO_SRC)
-if FULLSCREEN:
-    cv2.namedWindow('Video', cv2.WND_PROP_FULLSCREEN)
-    cv2.setWindowProperty(
-            'Video', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 
 
 # Initialize some variables
@@ -140,6 +145,8 @@ found_faces = []
 process_this_frame = True
 mode = 'DETECT'
 picked_face = None
+fullscreen_mode = FULLSCREEN
+toggle_fullscreen(not fullscreen_mode)
 
 
 while True:
@@ -181,6 +188,8 @@ while True:
     elif key == ord(' '):
         if mode == 'SNAPSHOT' and len(found_faces):
             picked_face = (picked_face + 1) % len(found_faces)
+    elif key == ord('f'):
+        fullsize_mode = toggle_fullsize(fullsize_mode)
     elif key == 13 and mode == 'SNAPSHOT' and len(found_faces):
         faces.add(found_faces[picked_face][2])
         mode, picked_face = toggle_mode(mode)
