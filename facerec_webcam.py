@@ -67,7 +67,7 @@ class Faces(object):
         # shrink frame for faster processing
         small_frame = cv2.resize(frame, (0, 0), fx=1.0/ratio, fy=1.0/ratio)
         # convert from BGR format (cv2) -> RGB (face_recognition)
-        small_frame = small_frame[:, :, ::-1]
+        small_frame = cv2.cvtColor(small_frame, cv2.COLOR_BGR2RGB)
         locs = face_recognition.face_locations(small_frame)
         faces_in_frame = face_recognition.face_encodings(small_frame, locs)
         # upscale found face locations (compensate shrinking above)
