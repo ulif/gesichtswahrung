@@ -189,7 +189,7 @@ while True:
         if mode == 'SNAPSHOT' and len(found_faces):
             picked_face = (picked_face + 1) % len(found_faces)
     elif key == ord('f'):
-        fullsize_mode = toggle_fullsize(fullsize_mode)
+        fullscreen_mode = toggle_fullscreen(fullscreen_mode)
     elif key == 13 and mode == 'SNAPSHOT' and len(found_faces):
         faces.add(found_faces[picked_face][2])
         mode, picked_face = toggle_mode(mode)
