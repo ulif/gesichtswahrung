@@ -1,7 +1,8 @@
 gesichtswahrung
 ===============
 
-Toy stuff based on `face_recognition`_
+Toy stuff based on `face_recognition`_, a Python wrapper around the C++ library
+`dlib`_.
 
 Here we collect Python scripts based on `face_recognition`_, a simple, yet
 awesome facial recognition API by `Adam Geitgey`_.
@@ -21,24 +22,24 @@ a working runtime environment by following the steps described below.
 
 Create a Python virtual environment::
 
-    $ virtualenv -p /usr/bin/python3.6 py36
+    $ python3.11 -m venv py311
 
 Activate it::
 
-    $ source ./py36/bin/activate
+    $ source ./py311/bin/activate
 
 Install `face_recognition`_::
 
-    (py36) $ pip install face_recognition
+    (py311) $ pip install face_recognition
 
 Install OpenCV_ Pythoin bindings::
 
-    (py36) $ pip install opencv-python
+    (py311) $ pip install opencv-python
 
 Now you should be able to import the `face_recognition` and `cv2` packages in
 Python scripts. You can check like this::
 
-    (py36) $ python
+    (py311) $ python
     >>> import face_recognition
     >>> import cv2
 
@@ -51,7 +52,7 @@ Running
 
 Run ``facerec_webcam`` as::
 
-    (py36) $ python facerec_webcam.py
+    (py311) $ python facerec_webcam.py
 
 This script requires a working webcam connected to your device. It allows to
 capture faces and to recognize these captured faces. All image data is held in
@@ -69,5 +70,6 @@ literally, "Keeping of a face".
 
 
 .. _`Adam Geitgey`: https://github.com/ageitgey
+.. _`dlib`: https://github.com/davisking/dlib/tree/master
 .. _`face_recognition`: https://github.com/ageitgey/face_recognition
 .. _`OpenCV`: https://opencv.org/
