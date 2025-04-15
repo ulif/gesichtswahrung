@@ -20,7 +20,7 @@ FONT = cv2.FONT_HERSHEY_DUPLEX
 RESIZE_RATIO = 4   # for faster face recognition we shrink frames
 MAX_FACES = 10     # maximum number of faces we look for (reduce load)
 VIDEO_SRC = 0      # the number of video source we want to use (first one: 0)
-DEFAULT_NAME = 'Unknown'
+DEFAULT_NAME = 'identifying...'
 SUSPECT_NAMES = ["Drama-Queen", "Prinz.essin", "Held.in", "Kurt", "Jaqueline", "Weltretter.in"]
 FULLSCREEN = True # Initial window state
 SCREENSIZE = None  # (width, height) of fullscreen resolution
@@ -106,11 +106,17 @@ def draw_face_box(frame, name, loc, color=(0x00, 0x00, 0xff)):
     fg = (0xff, 0xff, 0xff)
     if sum(color) > 0x180:
         fg = (0x00, 0x00, 0x00)
+    # frame around face...
     cv2.rectangle(frame, (left, top), (right, bottom), color, 2)
+    (text_w, text_h), baseline = cv2.getTextSize(name, FONT, 1.0, 1)
+    rec_w = max(right - left, text_w + 12)
+    text_x = int((left + right - text_w) / 2)
+    rect_y = min(text_x - 6, left)
+    # patch for name under box...
     cv2.rectangle(
-        frame, (left, bottom - 35), (right, bottom), color, cv2.FILLED)
+        frame, (rect_y, bottom), (rect_y + rec_w, bottom + 35), color, cv2.FILLED)
     cv2.putText(
-        frame, name, (left + 6, bottom - 6), FONT, 1.0, fg, 1)
+        frame, name, (text_x, bottom + text_h + 2), FONT, 1.0, fg, 1)
 
 
 def toggle_mode(mode):
