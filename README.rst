@@ -46,6 +46,13 @@ Python scripts. You can check like this::
 You can leave the interpreter pressing ``CTRL-D``. The above imports should not
 raise any exception.
 
+In the script `facerec_webcam.py` you can set a handfull of variables near the
+top.
+
+The ``SCREENSIZE`` setting (a tuple like ``(640, 480)``) is assumed to
+represent the width and height of the fullsize screen. If set, also the
+background is painted black (only) in fullscreen mode.
+
 
 Running
 -------

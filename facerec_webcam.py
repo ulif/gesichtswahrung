@@ -9,8 +9,10 @@
 #
 import face_recognition
 import cv2
+import random
 import logging
 import sys
+import numpy as np
 
 logger = logging.getLogger("ulif.facerec_webcam")
 
@@ -19,7 +21,10 @@ RESIZE_RATIO = 4   # for faster face recognition we shrink frames
 MAX_FACES = 10     # maximum number of faces we look for (reduce load)
 VIDEO_SRC = 0      # the number of video source we want to use (first one: 0)
 DEFAULT_NAME = 'Unknown'
-FULLSCREEN = False # Initial window state
+SUSPECT_NAMES = ["Drama-Queen", "Prinz.essin", "Held.in", "Kurt", "Jaqueline", "Weltretter.in"]
+FULLSCREEN = True # Initial window state
+SCREENSIZE = None  # (width, height) of fullscreen resolution
+# SCREENSIZE = (1920, 1080)  # Enables fully stretched fullscreen and black background if set
 
 
 class Faces(object):
@@ -38,6 +43,7 @@ class Faces(object):
         """
         self.current_num += 1
         name = 'Suspect #%s' % self.current_num
+        name = random.choice(SUSPECT_NAMES)
         self.faces.append((face, name))
         self.faces = self.faces[-MAX_FACES:]
 
@@ -126,13 +132,34 @@ def toggle_fullscreen(fullscreen):
     return not fullscreen
 
 
+def prepare_fullscreen(cam_format, screen_size):
+    """Compute offsets and scale-up factors for fullscreen.
+
+    Also create a black background image, that can be merged with the actual
+    cam images to provide black margins if the ratio of cam and screen are
+    different.
+
+    Returns a factor for stretching cam format so that it fits into given
+    screen size (keeping the cam ratio), offsets to display the stretched cam
+    images in the middle of the screen and a black image of screen size.
+    """
+    screen_w, screen_h = screen_size
+    frame_w, frame_h = cam_format
+    scale_up = min([(screen_w / frame_w), (screen_h / frame_h)])
+    bg_img = np.zeros((screen_h, screen_w, 3), np.uint8)
+    offset_x, offset_y = (
+            int((screen_w - scale_up * frame_w) / 2),
+            int((screen_h - scale_up * frame_h) / 2))
+    return scale_up, offset_x, offset_y, bg_img
+
+
 def draw_modestate(frame, mode):
     draw_text_box(frame, 0, 0, "MODE: %s" % mode)
     bottom = frame.shape[0]
     draw_text_box(
-        frame, 0, bottom - 21, "<press q to quit, s to toggle mode>", 0.6)
+        frame, 0, bottom - 25, "<press q to quit, s to toggle mode>", 0.8)
     if mode == 'SNAPSHOT':
-        draw_text_box(frame, 0, 25, 'SPC to select, ENTER to choose', 0.6)
+        draw_text_box(frame, 0, 27, 'SPC to select, ENTER to choose', 0.8)
 
 
 # Get a reference to webcam #0 (the default one)
@@ -146,18 +173,37 @@ process_this_frame = True
 mode = 'DETECT'
 picked_face = None
 fullscreen_mode = FULLSCREEN
+cam_format = (
+    video_capture.get(cv2.CAP_PROP_FRAME_WIDTH),
+    video_capture.get(cv2.CAP_PROP_FRAME_HEIGHT)
+    )
+
+if SCREENSIZE:
+    scale_up, offset_x, offset_y, bg_image = prepare_fullscreen(
+            cam_format, SCREENSIZE)
+else:
+    logger.warning("No SCREENSIZE set. Fullscreen mode might not fill complete screen and render background white or grey")
+
+logger.info("CAM format: %s" % (cam_format, ))
+
 toggle_fullscreen(not fullscreen_mode)
-
-
-while True:
+while video_capture.isOpened():
     # Grab a single frame of video
     if mode == 'DETECT':
         ret, frame = video_capture.read()
         if frame is None:
             logger.fatal("Not a valid video capture source: %s" % VIDEO_SRC)
             sys.exit(1)
+        if ret is not True:
+            sys.exit(1)
 
-        # orig_frame = frame.copy()
+    # Stretch image to fit into fullscreen (also paint background black)
+    if fullscreen_mode and SCREENSIZE and mode == 'DETECT':
+        frame = cv2.resize(
+            frame, dsize=None, fx=scale_up, fy=scale_up, interpolation=cv2.INTER_LINEAR)
+        background = bg_image.copy()
+        background[offset_y:offset_y + frame.shape[0], offset_x:offset_x + frame.shape[1]] = frame
+        frame = background
 
     # Only process every other frame of video to save time
     if process_this_frame and mode == 'DETECT':
