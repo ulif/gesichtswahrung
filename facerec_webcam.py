@@ -82,6 +82,25 @@ class Faces(object):
             yield loc, self.getName(face), face
 
 
+def get_valid_cam_source(default_src=VIDEO_SRC):
+    """Get a valid video source.
+
+    Returns a `VideoCapture` object to read webcam images from. If none can be
+    found, ``None`` is returned.
+
+    We look for the first 10 sources, indicated by integers. `VIDEO_SRC` is
+    used as default value tried first. As default source also all other formats
+    supported by OpenCV can be given. For instance IP-cam sources, video files
+    or collections of images.
+    """
+    # Look for first 10 sources but start with default source.
+    for src in [default_src,] + [x for x in range(9, -1, -1) if default_src != x]:
+        cap = cv2.VideoCapture(src)
+        if cap is not None and cap.isOpened():
+            return cap
+        logger.warning("Unable to handle video source: %s" % src)
+
+
 def draw_text_box(frame, x, y, text, scale=1.0, width=None, height=None):
     """Draw a black box in `frame` displaying `text`.
 
@@ -168,8 +187,12 @@ def draw_modestate(frame, mode):
         draw_text_box(frame, 0, 27, 'SPC to select, ENTER to choose', 0.8)
 
 
-# Get a reference to webcam #0 (the default one)
-video_capture = cv2.VideoCapture(VIDEO_SRC)
+# Get a reference to a valid webcam or other source...
+video_capture = get_valid_cam_source(VIDEO_SRC)
+if video_capture is None:
+    logger.warning("Could not find a valid video source. Exiting.")
+    sys.exit(1)
+
 
 
 # Initialize some variables
